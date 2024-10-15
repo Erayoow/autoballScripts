@@ -59,6 +59,37 @@ local function createUI()
     statusLabel.TextScaled = true
     statusLabel.Parent = mainFrame
     
+    -- Botón de encendido/apagado
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Text = "Disable Auto Parry"
+    toggleButton.Size = UDim2.new(0, 200, 0, 50)
+    toggleButton.Position = UDim2.new(0.5, -100, 0.7, 0)
+    toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleButton.Font = Enum.Font.GothamBold
+    toggleButton.TextScaled = true
+    toggleButton.Parent = mainFrame
+    
+    -- Funcionalidad del botón
+    local function toggleAutoParry()
+        if getgenv().AutoParry then
+            getgenv().AutoParry = false
+            toggleButton.Text = "Enable Auto Parry"
+            statusLabel.Text = "Auto Parry: Disabled"
+            statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0) -- Cambia el color a rojo
+            toggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Cambia el botón a verde
+        else
+            getgenv().AutoParry = true
+            toggleButton.Text = "Disable Auto Parry"
+            statusLabel.Text = "Auto Parry: Enabled"
+            statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Cambia el color a verde
+            toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Cambia el botón a rojo
+        end
+    end
+    
+    -- Conectar el evento de clic del botón con la función
+    toggleButton.MouseButton1Click:Connect(toggleAutoParry)
+    
     -- Animación de entrada
     local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = tweenService:Create(mainFrame, tweenInfo, {Position = UDim2.new(0.5, -200, 0.2, 50)})
@@ -107,7 +138,6 @@ function parry()
     end
 end
 
--- Función para detectar la bola
 function getBall()
     local realBall = nil
 
@@ -121,12 +151,10 @@ function getBall()
     return realBall
 end
 
--- Función para obtener el ping
 function getPing()
     return statsService:FindFirstChild("PerformanceStats"):FindFirstChild("Ping"):GetValue()
 end
 
--- Verificación de si el jugador está caminando
 function isWalking()
     local character = player.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return false, "N/A" end
@@ -145,7 +173,6 @@ function isWalking()
     return false, "Stationary"
 end
 
--- Evento de muerte del jugador
 local function onPlayerDeath()
     if getgenv().Visualize then
         if sphere then
@@ -158,7 +185,6 @@ player.CharacterAdded:Connect(function(character)
     character:WaitForChild("Humanoid").Died:Connect(onPlayerDeath)
 end)
 
--- Bucle principal de parry automático
 while getgenv().AutoParry do
     task.wait()
 
