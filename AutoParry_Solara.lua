@@ -1,221 +1,722 @@
--- Improved Adapted Script for Death Ball with Auto Parry, Auto Curve Ball, Advanced UI, and Additional Features
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0.5, 0, 0.7, 0)
+frame.Position = UDim2.new(0.25, 0.1, 0.1, 0.5)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Parent = gui
 
--- User Interface Creation
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local TitleLabel = Instance.new("TextLabel")
-local StatusLabel = Instance.new("TextLabel")
-local ToggleButtonParry = Instance.new("TextButton")
-local ToggleButtonCurve = Instance.new("TextButton")
-local ToggleButtonAutoAim = Instance.new("TextButton")
-local ResizeButton = Instance.new("TextButton")
+local gradient = Instance.new("UIGradient")
+gradient.Rotation = 45
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),  -- Preto
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))  -- Vermelho
+})
+gradient.Parent = frame
 
-ScreenGui.Parent = game:GetService("CoreGui")
-ScreenGui.Name = "NanoInterface"
-ScreenGui.ResetOnSpawn = false
+local title = Instance.new("TextLabel")
+title.Text = "My Little Porn v1"
+title.Font = Enum.Font.GothamSemibold
+title.TextSize = 36
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Position = UDim2.new(0.5, 0, 0.1, 0)
+title.AnchorPoint = Vector2.new(0.5, 0)
+title.Parent = frame
 
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-MainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
-MainFrame.Size = UDim2.new(0, 300, 0, 200)
-MainFrame.Visible = true
+local function CreateRandomPosition()
+    return UDim2.new(math.random(), 0, math.random(), 0)
+end
 
-TitleLabel.Parent = MainFrame
-TitleLabel.Text = "NANO - Death Ball Helper"
-TitleLabel.Font = Enum.Font.SourceSansBold
-TitleLabel.TextSize = 30
-TitleLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-TitleLabel.Size = UDim2.new(1, 0, 0.2, 0)
-TitleLabel.BackgroundTransparency = 1
+local function CreateRandomDrawing()
+    local drawing = Instance.new("ImageLabel")
+    drawing.Size = UDim2.new(0, math.random(50, 100), 0, math.random(50, 100))
+    drawing.Position = CreateRandomPosition()
+    drawing.Image = "rbxassetid://13334354464"  -- Substitua pelo ID da sua imagem
+    drawing.Parent = frame
+end
 
-StatusLabel.Parent = MainFrame
-StatusLabel.Text = "Auto Parry: ON\nAuto Curve: ON\nAuto Aim: OFF"
-StatusLabel.Font = Enum.Font.SourceSans
-StatusLabel.TextSize = 20
-StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-StatusLabel.Position = UDim2.new(0, 0, 0.2, 0)
-StatusLabel.Size = UDim2.new(1, 0, 0.4, 0)
-StatusLabel.BackgroundTransparency = 1
+-- Crie alguns desenhos aleatórios
+for _ = 1, 5 do
+    CreateRandomDrawing()
+end
 
-ToggleButtonParry.Parent = MainFrame
-ToggleButtonParry.Text = "Toggle Auto Parry (P)"
-ToggleButtonParry.Font = Enum.Font.SourceSans
-ToggleButtonParry.TextSize = 20
-ToggleButtonParry.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButtonParry.Position = UDim2.new(0, 10, 0.65, 0)
-ToggleButtonParry.Size = UDim2.new(0.3, -10, 0.2, 0)
+local button1 = Instance.new("TextButton")
+button1.Text = "Spirit Boss"
+button1.Size = UDim2.new(0, 250, 0, 55)
+button1.Position = UDim2.new(0.5, 0, 0.4, 0)
+button1.AnchorPoint = Vector2.new(0.5, 0)
+button1.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+button1.TextColor3 = Color3.fromRGB(255, 255, 255)
+button1.Font = Enum.Font.SourceSansBold
+button1.TextSize = 24
+button1.Parent = frame
 
-ToggleButtonCurve.Parent = MainFrame
-ToggleButtonCurve.Text = "Toggle Auto Curve (C)"
-ToggleButtonCurve.Font = Enum.Font.SourceSans
-ToggleButtonCurve.TextSize = 20
-ToggleButtonCurve.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButtonCurve.Position = UDim2.new(0.35, 10, 0.65, 0)
-ToggleButtonCurve.Size = UDim2.new(0.3, -10, 0.2, 0)
+local button2 = Instance.new("TextButton")
+button2.Text = "Mecha Boss"
+button2.Size = UDim2.new(0, 250, 0, 55)
+button2.Position = UDim2.new(0.5, 0, 0.6, 0)
+button2.AnchorPoint = Vector2.new(0.5, 0)
+button2.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+button2.TextColor3 = Color3.fromRGB(255, 255, 255)
+button2.Font = Enum.Font.SourceSansBold
+button2.TextSize = 24
+button2.Parent = frame
 
-ToggleButtonAutoAim.Parent = MainFrame
-ToggleButtonAutoAim.Text = "Toggle Auto Aim (A)"
-ToggleButtonAutoAim.Font = Enum.Font.SourceSans
-ToggleButtonAutoAim.TextSize = 20
-ToggleButtonAutoAim.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButtonAutoAim.Position = UDim2.new(0.7, 10, 0.65, 0)
-ToggleButtonAutoAim.Size = UDim2.new(0.3, -10, 0.2, 0)
+local function ShowSubcategories(buttonName)
+    print("Botão '" .. buttonName .. "' pressionado!")
+    -- Insira o código específico para cada botão aqui
+    if buttonName == "Spirit Boss" then
+        local player = game.Players.LocalPlayer
+local bossPosition = Vector3.new(483.05, 333.55, 1222.51)  -- Coordenadas do boss
+local lobbyPosition = Vector3.new(467.59, 285.60, 844.08)   -- Coordenadas do lobby
 
-ResizeButton.Parent = MainFrame
-ResizeButton.Text = "Resize UI"
-ResizeButton.Font = Enum.Font.SourceSans
-ResizeButton.TextSize = 20
-ResizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ResizeButton.Position = UDim2.new(0.35, 0, 0.9, 0)
-ResizeButton.Size = UDim2.new(0.3, 0, 0.1, 0)
+-- Variável para controlar o estado do script
+local isTeleporting = false
+local bossPartCreated = false
 
--- Variables for Auto Parry, Curve Ball, and Auto Aim
-local autoParryEnabled = true
-local autoCurveEnabled = true
-local autoAimEnabled = false
-local uiSmall = false
-
--- Function for Auto Parry
-local function autoParry()
-    if not autoParryEnabled then return end
-    
-    -- Detect incoming balls and perform parry
-    for _, ball in pairs(workspace:GetChildren()) do
-        if ball.Name == "Ball" and ball:FindFirstChild("Thrower") and ball.Thrower.Value ~= LocalPlayer then
-            local distance = (ball.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-            if distance < 15 then -- Adjust distance threshold as needed
-                local parryEvent = ReplicatedStorage:FindFirstChild("ParryEvent")
-                if parryEvent then
-                    parryEvent:FireServer(ball)
-                    -- Trigger parry animation or feedback
-                    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                        local animation = Instance.new("Animation")
-                        animation.AnimationId = "rbxassetid://12345678" -- Replace with actual animation ID
-                        local animator = LocalPlayer.Character.Humanoid:FindFirstChildOfClass("Animator")
-                        if animator then
-                            animator:LoadAnimation(animation):Play()
-                        end
-                    end
-                end
+-- Função para teleportar o jogador para o boss
+local function teleportToBoss()
+    if not isTeleporting then
+        isTeleporting = true
+        while isTeleporting do
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(bossPosition)
+            wait()  -- Pequeno atraso para tornar o teleporte imperceptível
+            if not bossPartCreated then
+                bossPartCreated = true
+                -- Crie a parte do BOSS aqui (seu código para criar a parte)
+                -- Por exemplo, você pode usar Instance.new() para criar uma parte
+                local bossPart = Instance.new("Part")
+                bossPart.Size = Vector3.new(11, 11, 11)  -- Tamanho da parte do BOSS
+                bossPart.Position = bossPosition + Vector3.new(0, -7, 0)  -- Posição abaixo da coordenada do boss
+                bossPart.Anchored = true
+                bossPart.Parent = game.Workspace  -- Adicione à Workspace ou outro objeto relevante
             end
         end
     end
 end
 
--- Function for Auto Curve Ball
-local function autoCurveBall()
-    if not autoCurveEnabled then return end
-    
-    -- Detect key press to curve the ball
-    if UserInputService:IsKeyDown(Enum.KeyCode.E) then
-        local curveEvent = ReplicatedStorage:FindFirstChild("CurveEvent")
-        if curveEvent then
-            curveEvent:FireServer() -- Replace with actual curve ball logic
-        end
+-- Função para teleportar o jogador para o lobby
+local function teleportToLobby()
+    isTeleporting = false
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(lobbyPosition)
+end
+
+-- Crie os botões para teleportar
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local bossButton = Instance.new("TextButton")
+bossButton.Position = UDim2.new(0.8, 0, 0.45, 0)
+bossButton.Size = UDim2.new(0, 150, 0, 35)
+bossButton.Parent = gui
+bossButton.Text = "BOSS farm"
+bossButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+bossButton.Font = Enum.Font.SourceSansBold
+bossButton.TextSize = 18  -- Aumente o tamanho da fonte
+bossButton.MouseButton1Click:Connect(teleportToBoss)  -- Conecte ao teleport para o boss
+
+local lobbyButton = Instance.new("TextButton")
+lobbyButton.Position = UDim2.new(0.8, 0, 0.55, 0)
+lobbyButton.Size = UDim2.new(0, 150, 0, 35)
+lobbyButton.Parent = gui
+lobbyButton.Text = "LOBBY"
+lobbyButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+lobbyButton.Font = Enum.Font.SourceSansBold
+lobbyButton.TextSize = 20  -- Aumente o tamanho da fonte
+lobbyButton.MouseButton1Click:Connect(teleportToLobby)  -- Conecte ao teleport para o lobby
+
+-- Crie a hub maior com o texto "BY CALiXTO"
+local hubBackground = Instance.new("TextLabel")
+hubBackground.Size = UDim2.new(0, 400, 0, 100)
+hubBackground.Position = UDim2.new(0.87, 0, 0.3, 0)
+hubBackground.AnchorPoint = Vector2.new(0.5, 0.5)
+hubBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+hubBackground.BackgroundTransparency = 0.5
+hubBackground.Text = "BY CALiXTO and COPiLOT AI"
+hubBackground.Font = Enum.Font.SourceSansBold
+hubBackground.TextSize = 24
+hubBackground.TextColor3 = Color3.fromRGB(255, 255, 255)
+hubBackground.Parent = gui
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local ativarBotao = Instance.new("TextButton")
+ativarBotao.Position = UDim2.new(0.8, 0, 0.5, 0)  -- Reposicionado um pouco mais à esquerda
+ativarBotao.Size = UDim2.new(0, 150, 0, 35)
+ativarBotao.Text = "CAM ativar/desativar"
+ativarBotao.BackgroundColor3 = Color3.fromRGB(255, 255, 0)  -- Amarelo
+ativarBotao.Font = Enum.Font.SourceSansBold
+ativarBotao.TextSize = 15
+ativarBotao.Parent = gui
+
+local desativarBotao = Instance.new("TextButton")
+desativarBotao.Position = UDim2.new(0.8, 0, 0.6, 0)  -- Reposicionado um pouco mais à esquerda
+desativarBotao.Size = UDim2.new(0, 0, 0, 0)
+desativarBotao.Text = "Desativar CAMERA"
+desativarBotao.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Verde
+desativarBotao.Font = Enum.Font.SourceSansBold
+desativarBotao.TextSize = 0
+desativarBotao.Parent = gui
+
+local scriptAtivado = false
+local coordenadasFixas = Vector3.new(452.17, 253.60, 1202.48)
+
+local function atualizarDirecaoCamera()
+    local camera = game.Workspace.CurrentCamera
+    if scriptAtivado then
+        local direcao = (coordenadasFixas - camera.CFrame.Position).unit
+        camera.CFrame = CFrame.new(camera.CFrame.Position, camera.CFrame.Position + direcao)
     end
 end
 
--- Function for Auto Aim
-local function autoAim()
-    if not autoAimEnabled then return end
-    
-    -- Find nearest target to aim at
-    local nearestBall = nil
-    local shortestDistance = math.huge
-    for _, ball in pairs(workspace:GetChildren()) do
-        if ball.Name == "Ball" and ball:FindFirstChild("Thrower") and ball.Thrower.Value ~= LocalPlayer then
-            local distance = (ball.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-            if distance < shortestDistance then
-                shortestDistance = distance
-                nearestBall = ball
-            end
-        end
-    end
-    
-    -- Adjust player character's aim to target the nearest ball
-    if nearestBall and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local direction = (nearestBall.Position - LocalPlayer.Character.HumanoidRootPart.Position).Unit
-        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(LocalPlayer.Character.HumanoidRootPart.Position, LocalPlayer.Character.HumanoidRootPart.Position + direction)
-    end
-end
-
--- Function to Resize UI
-local function resizeUI()
-    if uiSmall then
-        MainFrame.Size = UDim2.new(0, 300, 0, 200)
+local function alternarScript()
+    scriptAtivado = not scriptAtivado
+    if scriptAtivado then
+        print("Script ativado! A câmera ficará sempre nas coordenadas fixas.")
     else
-        MainFrame.Size = UDim2.new(0, 150, 0, 100)
+        print("Script desativado.")
     end
-    uiSmall = not uiSmall
 end
 
--- Connecting functions to RenderStep for continuous checks
-RunService.RenderStepped:Connect(function()
-    autoParry()
-    autoCurveBall()
-    autoAim()
-end)
+ativarBotao.MouseButton1Click:Connect(alternarScript)
+desativarBotao.MouseButton1Click:Connect(alternarScript)
 
--- Toggle Functions (Keybinds and UI Buttons to toggle Auto Parry, Auto Curve, Auto Aim, and Resize UI)
-UserInputService.InputBegan:Connect(function(input, isProcessed)
-    if isProcessed then return end
-    if input.KeyCode == Enum.KeyCode.P then
-        autoParryEnabled = not autoParryEnabled
-        StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-    elseif input.KeyCode == Enum.KeyCode.C then
-        autoCurveEnabled = not autoCurveEnabled
-        StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-    elseif input.KeyCode == Enum.KeyCode.A then
-        autoAimEnabled = not autoAimEnabled
-        StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-    elseif input.KeyCode == Enum.KeyCode.R then
-        resizeUI()
+game:GetService("RunService").Heartbeat:Connect(atualizarDirecaoCamera)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local button = Instance.new("TextButton")
+button.Position = UDim2.new(0.3, 0, 0.4, 0)
+button.Size = UDim2.new(0, 700, 0, 100)
+button.Text = "Recomendável (ping entre 0 e 155ms).UTILIZE tinitask e auto click que Deus esteja com vc.\nCréditos: CALiXTO5 no YouTube e COPiLOT no Bing da Microsoft"
+button.BackgroundColor3 = Color3.fromRGB(150, 50, 0)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Parent = gui
+
+local startTime = tick()
+local duration = 5  -- Tempo total para a GUI desaparecer (em segundos)
+
+local function fadeOut()
+    local elapsedTime = tick() - startTime
+    local alpha = 1 - elapsedTime / duration
+    button.TextTransparency = alpha
+    if elapsedTime >= duration then
+        button:Destroy()  -- Remove o botão da GUI após o tempo especificado
+        gui:Destroy()  -- Remove a GUI completamente
+    else
+        wait(0.1)
+        fadeOut()
     end
-end)
+end
 
-ToggleButtonParry.MouseButton1Click:Connect(function()
-    autoParryEnabled = not autoParryEnabled
-    StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-end)
+button.MouseButton1Click:Connect(fadeOut)
+local ShiftlockStarterGui = Instance.new("ScreenGui")
+local ImageButton = Instance.new("ImageButton")
 
-ToggleButtonCurve.MouseButton1Click:Connect(function()
-    autoCurveEnabled = not autoCurveEnabled
-    StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-end)
+-- Properties:
+ShiftlockStarterGui.Name = "Shiftlock (StarterGui)"
+ShiftlockStarterGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ShiftlockStarterGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-ToggleButtonAutoAim.MouseButton1Click:Connect(function()
-    autoAimEnabled = not autoAimEnabled
-    StatusLabel.Text = "Auto Parry: " .. (autoParryEnabled and "ON" or "OFF") .. "\nAuto Curve: " .. (autoCurveEnabled and "ON" or "OFF") .. "\nAuto Aim: " .. (autoAimEnabled and "ON" or "OFF")
-end)
+ImageButton.Parent = ShiftlockStarterGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageButton.BackgroundTransparency = 1.000
+ImageButton.Position = UDim2.new(0.921914339, 0, 0.552375436, 0)
+ImageButton.Size = UDim2.new(0.0336147112, 0, 0.0361305636, 0)
+ImageButton.SizeConstraint = Enum.SizeConstraint.RelativeXX
+ImageButton.Image = "http://www.roblox.com/asset/?id=182223762" -- Replace with your own image ID
 
-ResizeButton.MouseButton1Click:Connect(function()
-    resizeUI()
-end)
+-- Scripts:
+local function TLQOYN_fake_script() -- ImageButton.ShiftGUI
+    local script = Instance.new('LocalScript', ImageButton)
 
--- Create a field of view indicator (only visible to the player)
-local FoVPart = Instance.new("Part")
-FoVPart.Anchored = true
-FoVPart.CanCollide = false
-FoVPart.CanQuery = false
-FoVPart.CanTouch = false
-FoVPart.Transparency = 0.9
-FoVPart.Color = Color3.fromRGB(0, 255, 0)
-FoVPart.Size = Vector3.new(30, 0.2, 30)
-FoVPart.Shape = Enum.PartType.Cylinder
-FoVPart.Parent = workspace
-FoVPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)
+    local MobileCameraFramework = {}
+    local players = game:GetService("Players")
+    local runservice = game:GetService("RunService")
+    local CAS = game:GetService("ContextActionService")
+    local player = players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local root = character:WaitForChild("HumanoidRootPart")
+    local humanoid = character.Humanoid
+    local camera = workspace.CurrentCamera
+    local button = script.Parent
 
-RunService.RenderStepped:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        FoVPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)
+    -- Visibility
+    local uis = game:GetService("UserInputService")
+    local ismobile = uis.TouchEnabled
+    button.Visible = not ismobile
+
+    local MAX_LENGTH = 900000
+    local active = false
+    local ENABLED_OFFSET = CFrame.new(1.7, 0, 0)
+    local DISABLED_OFFSET = CFrame.new(-1.7, 0, 0)
+
+    local function UpdateAutoRotate(BOOL)
+        humanoid.AutoRotate = BOOL
     end
+
+    local function GetUpdatedCameraCFrame(ROOT, CAMERA)
+        return CFrame.new(root.Position, Vector3.new(CAMERA.CFrame.LookVector.X * MAX_LENGTH, root.Position.Y, CAMERA.CFrame.LookVector.Z * MAX_LENGTH))
+    end
+
+    local function EnableShiftlock()
+        UpdateAutoRotate(false)
+        root.CFrame = GetUpdatedCameraCFrame(root, camera)
+        camera.CFrame = camera.CFrame * ENABLED_OFFSET
+    end
+
+    local function DisableShiftlock()
+        UpdateAutoRotate(true)
+        camera.CFrame = camera.CFrame * DISABLED_OFFSET
+        pcall(function()
+            active:Disconnect()
+            active = nil
+        end)
+    end
+
+    active = false
+
+    function ShiftLock()
+        if not active then
+            active = runservice.RenderStepped:Connect(function()
+                EnableShiftlock()
+            end)
+        else
+            DisableShiftlock()
+        end
+    end
+
+    local ShiftLockButton = CAS:BindAction("ShiftLOCK", ShiftLock, false, Enum.KeyCode.LeftShift)
+    CAS:SetPosition("ShiftLOCK", UDim2.new(0.8, 0, 0.8, 0))
+
+    button.MouseButton1Click:Connect(ShiftLock)
+
+    return MobileCameraFramework
+end
+
+coroutine.wrap(TLQOYN_fake_script)()
+local ba = Instance.new("ScreenGui")
+local ca = Instance.new("Frame")
+local ab = Instance.new("TextLabel")
+
+ba.Parent = game.CoreGui
+ba.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ca.Parent = ba
+ca.Active = true
+ca.BackgroundColor3 = Color3.new(0, 0, 0) -- Defina a cor desejada aqui
+ca.Draggable = true
+ca.Position = UDim2.new(0.7, 0, 0.1, 0)
+ca.Size = UDim2.new(0, 300, 0, 50) -- Ajuste o tamanho conforme necessário
+
+ab.Parent = ca
+ab.BackgroundColor3 = Color3.new(1, 1, 1) -- Defina uma cor quase transparente
+ab.Position = UDim2.new(0, 0, 0.5, 0)
+ab.Size = UDim2.new(0, 300, 0, 25)
+ab.Font = Enum.Font.Arial
+ab.Text = "AFK mode"
+ab.TextColor3 = Color3.new(0, 0.8, 0) -- Verde escuro (ativo)
+ab.TextSize = 18
+
+local bb = game:service("VirtualUser")
+game:service("Players").LocalPlayer.Idled:connect(function()
+    bb:CaptureController()
+    bb:ClickButton2(Vector2.new())
+    ab.Text = "O Roblox tentou te expulsar, mas eu o impedi"
+    ab.TextColor3 = Color3.new(1, 0, 0) -- Vermelho (não ativo)
+    wait(2)
+    ab.Text = "AFK mode"
+    ab.TextColor3 = Color3.new(0, 0.8, 0) -- Verde escuro (ativo)
+end)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local lowGraphicsButton = Instance.new("TextButton")
+lowGraphicsButton.Position = UDim2.new(0.9, 0, 0.45, 0)
+lowGraphicsButton.Size = UDim2.new(0, 150, 0, 35)
+lowGraphicsButton.Parent = gui
+lowGraphicsButton.Text = "Low Lag"
+lowGraphicsButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+lowGraphicsButton.Font = Enum.Font.SourceSansBold
+lowGraphicsButton.TextSize = 24
+
+local function ActivateLowGraphics()
+    local g = game
+    local w = g.Workspace
+    local l = g.Lighting
+    local t = w.Terrain
+
+    -- Modifique os valores para ajustar o desempenho
+    t.WaterWaveSize = 0
+    t.WaterWaveSpeed = 0
+    t.WaterReflectance = 0
+    t.WaterTransparency = 0
+    l.GlobalShadows = false
+    l.FogEnd = 9e9
+    l.Brightness = 0
+    settings().Rendering.QualityLevel = "Level01"
+
+    for _, v in pairs(g:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Explosion") then
+            v.BlastPressure = 1
+            v.BlastRadius = 1
+        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+            v.Enabled = false
+        elseif v:IsA("MeshPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+            v.TextureID = 10385902758728957
+        end
+    end
+end
+
+lowGraphicsButton.MouseButton1Click:Connect(ActivateLowGraphics)
+
+        print("Executando script para Spirit Boss...")
+    elseif buttonName == "Mecha Boss" then
+        local player = game.Players.LocalPlayer
+local bossPosition = Vector3.new(483.05, 333.55, 1222.51)  -- Coordenadas do boss
+local lobbyPosition = Vector3.new(467.59, 285.60, 844.08)   -- Coordenadas do lobby
+
+-- Variável para controlar o estado do script
+local isTeleporting = false
+local bossPartCreated = false
+
+-- Função para teleportar o jogador para o boss
+local function teleportToBoss()
+    if not isTeleporting then
+        isTeleporting = true
+        while isTeleporting do
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(bossPosition)
+            wait()  -- Pequeno atraso para tornar o teleporte imperceptível
+            if not bossPartCreated then
+                bossPartCreated = true
+                -- Crie a parte do BOSS aqui (seu código para criar a parte)
+                -- Por exemplo, você pode usar Instance.new() para criar uma parte
+                local bossPart = Instance.new("Part")
+                bossPart.Size = Vector3.new(11, 11, 11)  -- Tamanho da parte do BOSS
+                bossPart.Position = bossPosition + Vector3.new(0, -7, 0)  -- Posição abaixo da coordenada do boss
+                bossPart.Anchored = true
+                bossPart.Parent = game.Workspace  -- Adicione à Workspace ou outro objeto relevante
+            end
+        end
+    end
+end
+
+-- Função para teleportar o jogador para o lobby
+local function teleportToLobby()
+    isTeleporting = false
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(lobbyPosition)
+end
+
+-- Crie os botões para teleportar
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local bossButton = Instance.new("TextButton")
+bossButton.Position = UDim2.new(0.8, 0, 0.45, 0)
+bossButton.Size = UDim2.new(0, 150, 0, 35)
+bossButton.Parent = gui
+bossButton.Text = "BOSS farm"
+bossButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+bossButton.Font = Enum.Font.SourceSansBold
+bossButton.TextSize = 18  -- Aumente o tamanho da fonte
+bossButton.MouseButton1Click:Connect(teleportToBoss)  -- Conecte ao teleport para o boss
+
+local lobbyButton = Instance.new("TextButton")
+lobbyButton.Position = UDim2.new(0.8, 0, 0.55, 0)
+lobbyButton.Size = UDim2.new(0, 150, 0, 35)
+lobbyButton.Parent = gui
+lobbyButton.Text = "LOBBY"
+lobbyButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+lobbyButton.Font = Enum.Font.SourceSansBold
+lobbyButton.TextSize = 20  -- Aumente o tamanho da fonte
+lobbyButton.MouseButton1Click:Connect(teleportToLobby)  -- Conecte ao teleport para o lobby
+
+-- Crie a hub maior com o texto "BY CALiXTO"
+local hubBackground = Instance.new("TextLabel")
+hubBackground.Size = UDim2.new(0, 400, 0, 100)
+hubBackground.Position = UDim2.new(0.87, 0, 0.3, 0)
+hubBackground.AnchorPoint = Vector2.new(0.5, 0.5)
+hubBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+hubBackground.BackgroundTransparency = 0.5
+hubBackground.Text = "BY CALiXTO and COPiLOT AI"
+hubBackground.Font = Enum.Font.SourceSansBold
+hubBackground.TextSize = 24
+hubBackground.TextColor3 = Color3.fromRGB(255, 255, 255)
+hubBackground.Parent = gui
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local ativarBotao = Instance.new("TextButton")
+ativarBotao.Position = UDim2.new(0.8, 0, 0.5, 0)  -- Reposicionado um pouco mais à esquerda
+ativarBotao.Size = UDim2.new(0, 150, 0, 35)
+ativarBotao.Text = "CAM ativar/desativar"
+ativarBotao.BackgroundColor3 = Color3.fromRGB(255, 255, 0)  -- Amarelo
+ativarBotao.Font = Enum.Font.SourceSansBold
+ativarBotao.TextSize = 15
+ativarBotao.Parent = gui
+
+local desativarBotao = Instance.new("TextButton")
+desativarBotao.Position = UDim2.new(0.8, 0, 0.6, 0)  -- Reposicionado um pouco mais à esquerda
+desativarBotao.Size = UDim2.new(0, 0, 0, 0)
+desativarBotao.Text = "Desativar CAMERA"
+desativarBotao.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Verde
+desativarBotao.Font = Enum.Font.SourceSansBold
+desativarBotao.TextSize = 0
+desativarBotao.Parent = gui
+
+local scriptAtivado = false
+local coordenadasFixas = Vector3.new(477.17, 277.60, 1199.48)
+
+local function atualizarDirecaoCamera()
+    local camera = game.Workspace.CurrentCamera
+    if scriptAtivado then
+        local direcao = (coordenadasFixas - camera.CFrame.Position).unit
+        camera.CFrame = CFrame.new(camera.CFrame.Position, camera.CFrame.Position + direcao)
+    end
+end
+
+local function alternarScript()
+    scriptAtivado = not scriptAtivado
+    if scriptAtivado then
+        print("Script ativado! A câmera ficará sempre nas coordenadas fixas.")
+    else
+        print("Script desativado.")
+    end
+end
+
+ativarBotao.MouseButton1Click:Connect(alternarScript)
+desativarBotao.MouseButton1Click:Connect(alternarScript)
+
+game:GetService("RunService").Heartbeat:Connect(atualizarDirecaoCamera)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local button = Instance.new("TextButton")
+button.Position = UDim2.new(0.3, 0, 0.4, 0)
+button.Size = UDim2.new(0, 700, 0, 100)
+button.Text = "Recomendável (ping entre 0 e 155ms).UTILIZE tinitask e auto click que Deus esteja com vc.\nCréditos: CALiXTO5 no YouTube e COPiLOT no Bing da Microsoft"
+button.BackgroundColor3 = Color3.fromRGB(150, 50, 0)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Parent = gui
+
+local startTime = tick()
+local duration = 5  -- Tempo total para a GUI desaparecer (em segundos)
+
+local function fadeOut()
+    local elapsedTime = tick() - startTime
+    local alpha = 1 - elapsedTime / duration
+    button.TextTransparency = alpha
+    if elapsedTime >= duration then
+        button:Destroy()  -- Remove o botão da GUI após o tempo especificado
+        gui:Destroy()  -- Remove a GUI completamente
+    else
+        wait(0.1)
+        fadeOut()
+    end
+end
+
+button.MouseButton1Click:Connect(fadeOut)
+local ShiftlockStarterGui = Instance.new("ScreenGui")
+local ImageButton = Instance.new("ImageButton")
+
+-- Properties:
+ShiftlockStarterGui.Name = "Shiftlock (StarterGui)"
+ShiftlockStarterGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ShiftlockStarterGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+ImageButton.Parent = ShiftlockStarterGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageButton.BackgroundTransparency = 1.000
+ImageButton.Position = UDim2.new(0.921914339, 0, 0.552375436, 0)
+ImageButton.Size = UDim2.new(0.0336147112, 0, 0.0361305636, 0)
+ImageButton.SizeConstraint = Enum.SizeConstraint.RelativeXX
+ImageButton.Image = "http://www.roblox.com/asset/?id=182223762" -- Replace with your own image ID
+
+-- Scripts:
+local function TLQOYN_fake_script() -- ImageButton.ShiftGUI
+    local script = Instance.new('LocalScript', ImageButton)
+
+    local MobileCameraFramework = {}
+    local players = game:GetService("Players")
+    local runservice = game:GetService("RunService")
+    local CAS = game:GetService("ContextActionService")
+    local player = players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local root = character:WaitForChild("HumanoidRootPart")
+    local humanoid = character.Humanoid
+    local camera = workspace.CurrentCamera
+    local button = script.Parent
+
+    -- Visibility
+    local uis = game:GetService("UserInputService")
+    local ismobile = uis.TouchEnabled
+    button.Visible = not ismobile
+
+    local MAX_LENGTH = 900000
+    local active = false
+    local ENABLED_OFFSET = CFrame.new(1.7, 0, 0)
+    local DISABLED_OFFSET = CFrame.new(-1.7, 0, 0)
+
+    local function UpdateAutoRotate(BOOL)
+        humanoid.AutoRotate = BOOL
+    end
+
+    local function GetUpdatedCameraCFrame(ROOT, CAMERA)
+        return CFrame.new(root.Position, Vector3.new(CAMERA.CFrame.LookVector.X * MAX_LENGTH, root.Position.Y, CAMERA.CFrame.LookVector.Z * MAX_LENGTH))
+    end
+
+    local function EnableShiftlock()
+        UpdateAutoRotate(false)
+        root.CFrame = GetUpdatedCameraCFrame(root, camera)
+        camera.CFrame = camera.CFrame * ENABLED_OFFSET
+    end
+
+    local function DisableShiftlock()
+        UpdateAutoRotate(true)
+        camera.CFrame = camera.CFrame * DISABLED_OFFSET
+        pcall(function()
+            active:Disconnect()
+            active = nil
+        end)
+    end
+
+    active = false
+
+    function ShiftLock()
+        if not active then
+            active = runservice.RenderStepped:Connect(function()
+                EnableShiftlock()
+            end)
+        else
+            DisableShiftlock()
+        end
+    end
+
+    local ShiftLockButton = CAS:BindAction("ShiftLOCK", ShiftLock, false, Enum.KeyCode.LeftShift)
+    CAS:SetPosition("ShiftLOCK", UDim2.new(0.8, 0, 0.8, 0))
+
+    button.MouseButton1Click:Connect(ShiftLock)
+
+    return MobileCameraFramework
+end
+
+coroutine.wrap(TLQOYN_fake_script)()
+local ba = Instance.new("ScreenGui")
+local ca = Instance.new("Frame")
+local ab = Instance.new("TextLabel")
+
+ba.Parent = game.CoreGui
+ba.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ca.Parent = ba
+ca.Active = true
+ca.BackgroundColor3 = Color3.new(0, 0, 0) -- Defina a cor desejada aqui
+ca.Draggable = true
+ca.Position = UDim2.new(0.7, 0, 0.1, 0)
+ca.Size = UDim2.new(0, 300, 0, 50) -- Ajuste o tamanho conforme necessário
+
+ab.Parent = ca
+ab.BackgroundColor3 = Color3.new(1, 1, 1) -- Defina uma cor quase transparente
+ab.Position = UDim2.new(0, 0, 0.5, 0)
+ab.Size = UDim2.new(0, 300, 0, 25)
+ab.Font = Enum.Font.Arial
+ab.Text = "AFK mode"
+ab.TextColor3 = Color3.new(0, 0.8, 0) -- Verde escuro (ativo)
+ab.TextSize = 18
+
+local bb = game:service("VirtualUser")
+game:service("Players").LocalPlayer.Idled:connect(function()
+    bb:CaptureController()
+    bb:ClickButton2(Vector2.new())
+    ab.Text = "O Roblox tentou te expulsar, mas eu o impedi"
+    ab.TextColor3 = Color3.new(1, 0, 0) -- Vermelho (não ativo)
+    wait(2)
+    ab.Text = "AFK mode"
+    ab.TextColor3 = Color3.new(0, 0.8, 0) -- Verde escuro (ativo)
+end)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local lowGraphicsButton = Instance.new("TextButton")
+lowGraphicsButton.Position = UDim2.new(0.9, 0, 0.45, 0)
+lowGraphicsButton.Size = UDim2.new(0, 150, 0, 35)
+lowGraphicsButton.Parent = gui
+lowGraphicsButton.Text = "Low Lag"
+lowGraphicsButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)  -- Azul
+lowGraphicsButton.Font = Enum.Font.SourceSansBold
+lowGraphicsButton.TextSize = 24
+
+local function ActivateLowGraphics()
+    local g = game
+    local w = g.Workspace
+    local l = g.Lighting
+    local t = w.Terrain
+
+    -- Modifique os valores para ajustar o desempenho
+    t.WaterWaveSize = 0
+    t.WaterWaveSpeed = 0
+    t.WaterReflectance = 0
+    t.WaterTransparency = 0
+    l.GlobalShadows = false
+    l.FogEnd = 9e9
+    l.Brightness = 0
+    settings().Rendering.QualityLevel = "Level01"
+
+    for _, v in pairs(g:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Explosion") then
+            v.BlastPressure = 1
+            v.BlastRadius = 1
+        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+            v.Enabled = false
+        elseif v:IsA("MeshPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+            v.TextureID = 10385902758728957
+        end
+    end
+end
+
+lowGraphicsButton.MouseButton1Click:Connect(ActivateLowGraphics)
+
+        print("Executando script para Mecha Boss...")
+    end
+
+    wait(1)
+    frame:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 1, true)
+    wait(1)
+    gui:Destroy()
+end
+
+button1.MouseButton1Click:Connect(function()
+    ShowSubcategories("Spirit Boss")
 end)
 
-print("Death Ball Script Loaded Successfully with Enhanced Features")
+button2.MouseButton1Click:Connect(function()
+    ShowSubcategories("Mecha Boss")
+end)
