@@ -11,8 +11,9 @@ local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local TitleLabel = Instance.new("TextLabel")
 
-ScreenGui.Parent = game.CoreGui
+ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.Name = "NanoInterface"
+ScreenGui.ResetOnSpawn = false
 
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -75,5 +76,22 @@ UserInputService.InputBegan:Connect(function(input, isProcessed)
         TitleLabel.Text = "NANO - Auto Curve: " .. (autoCurveEnabled and "ON" or "OFF")
     end
 end)  
+
+-- Create a field of view indicator (only visible to the player)
+local FoVPart = Instance.new("Part")
+FoVPart.Anchored = true
+FoVPart.CanCollide = false
+FoVPart.Transparency = 0.9
+FoVPart.Color = Color3.fromRGB(0, 255, 0)
+FoVPart.Size = Vector3.new(30, 0.2, 30)
+FoVPart.Shape = Enum.PartType.Cylinder
+FoVPart.Parent = workspace
+FoVPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)
+
+RunService.RenderStepped:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        FoVPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)
+    end
+end)
 
 print("Death Ball Script Loaded Successfully")
