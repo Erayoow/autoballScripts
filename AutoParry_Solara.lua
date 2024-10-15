@@ -43,7 +43,14 @@ local function autoParry()
             local distance = (ball.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
             if distance < 15 then -- Adjust distance threshold as needed
                 -- Perform parry
-                game.ReplicatedStorage.ParryEvent:FireServer(ball)
+                local parryEvent = game.ReplicatedStorage:FindFirstChild("ParryEvent")
+                if parryEvent then
+                    parryEvent:FireServer(ball)
+                    -- Ensure animation or visual feedback is triggered
+                    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                        LocalPlayer.Character.Humanoid:LoadAnimation(script.ParryAnimation):Play()
+                    end
+                end
             end
         end
     end
@@ -55,7 +62,10 @@ local function autoCurveBall()
     
     -- Assuming there's a way to curve the ball after throwing
     if UserInputService:IsKeyDown(Enum.KeyCode.E) then
-        game.ReplicatedStorage.CurveEvent:FireServer() -- Replace with actual curve ball logic
+        local curveEvent = game.ReplicatedStorage:FindFirstChild("CurveEvent")
+        if curveEvent then
+            curveEvent:FireServer() -- Replace with actual curve ball logic
+        end
     end
 end
 
