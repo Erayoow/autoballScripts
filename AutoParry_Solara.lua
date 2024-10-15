@@ -203,6 +203,8 @@ end)
 local FoVPart = Instance.new("Part")
 FoVPart.Anchored = true
 FoVPart.CanCollide = false
+FoVPart.CanQuery = false
+FoVPart.CanTouch = false
 FoVPart.Transparency = 0.9
 FoVPart.Color = Color3.fromRGB(0, 255, 0)
 FoVPart.Size = Vector3.new(30, 0.2, 30)
